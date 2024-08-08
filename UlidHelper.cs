@@ -25,9 +25,9 @@ namespace UlidFramework
         public byte[] data;
     }
 
-    internal static class UlidHelper
+    internal static class UlidHelperInterop86
     {
-        private const string DllName = "UlidInterop.dll";
+        private const string DllName = "x86/UlidInterop.dll";
         [DllImport(DllName, EntryPoint = "NewUlid", CallingConvention = CallingConvention.Cdecl)]
         public static extern void NewUlid(ref UlidInteropStruct str);
 
@@ -38,14 +38,87 @@ namespace UlidFramework
         public static extern int CompareUlid(ref UlidInteropStruct ulid1, ref UlidInteropStruct ulid2);
 
         [DllImport(DllName, EntryPoint = "TryParse", CallingConvention = CallingConvention.Cdecl)]
-        public static extern bool TryParse([MarshalAs(UnmanagedType.LPStr)] string str, ref UlidParseStruct @struct);
+        public static extern bool TryParse([MarshalAs(UnmanagedType.LPStr)] string str, out UlidParseStruct @struct);
 
         [DllImport(DllName, EntryPoint = "ExtractTime", CallingConvention = CallingConvention.Cdecl)]
         public static extern uint ExtractTimeEpoch(ref UlidInteropStruct ulid);
 
         [DllImport(DllName, EntryPoint = "ToString", CallingConvention = CallingConvention.Cdecl)]
-        private static extern IntPtr ToString(ref UlidInteropStruct ulid);
+        public static extern IntPtr ToString(ref UlidInteropStruct ulid);
+    }
+    
+    internal static class UlidHelperInterop64
+    {
+        private const string DllName = "x64/UlidInterop.dll";
+        [DllImport(DllName, EntryPoint = "NewUlid", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void NewUlid(ref UlidInteropStruct str);
 
+        [DllImport(DllName, EntryPoint = "NewUlidRng", CallingConvention = CallingConvention.Cdecl)]
+        public static extern void NewUlid(ref UlidInteropStruct str, int rng);
+
+        [DllImport(DllName, EntryPoint = "CompareUlid", CallingConvention = CallingConvention.Cdecl)]
+        public static extern int CompareUlid(ref UlidInteropStruct ulid1, ref UlidInteropStruct ulid2);
+
+        [DllImport(DllName, EntryPoint = "TryParse", CallingConvention = CallingConvention.Cdecl)]
+        public static extern bool TryParse([MarshalAs(UnmanagedType.LPStr)] string str, out UlidParseStruct @struct);
+
+        [DllImport(DllName, EntryPoint = "ExtractTime", CallingConvention = CallingConvention.Cdecl)]
+        public static extern uint ExtractTimeEpoch(ref UlidInteropStruct ulid);
+
+        [DllImport(DllName, EntryPoint = "ToString", CallingConvention = CallingConvention.Cdecl)]
+        public static extern IntPtr ToString(ref UlidInteropStruct ulid);
+    }
+    
+    internal static class UlidHelper
+    {        
+        public static void NewUlid(ref UlidInteropStruct str)
+        {
+            if (Environment.Is64BitProcess)
+                UlidHelperInterop64.NewUlid(ref str);
+            else
+                UlidHelperInterop86.NewUlid(ref str);
+        }
+
+        public static void NewUlid(ref UlidInteropStruct str, int rng)
+        {
+            if (Environment.Is64BitProcess)
+                UlidHelperInterop64.NewUlid(ref str, rng);
+            else
+                UlidHelperInterop86.NewUlid(ref str, rng);
+        }
+
+        public static int CompareUlid(ref UlidInteropStruct ulid1, ref UlidInteropStruct ulid2)
+        {
+            if (Environment.Is64BitProcess)
+                return UlidHelperInterop64.CompareUlid(ref ulid1, ref ulid2);
+            
+            return UlidHelperInterop86.CompareUlid(ref ulid1, ref ulid2);
+        }
+
+        internal static bool TryParse(string str, out UlidParseStruct @struct)
+        {
+            if (Environment.Is64BitProcess)
+                return UlidHelperInterop64.TryParse(str, out @struct);
+            
+            return UlidHelperInterop86.TryParse(str, out @struct);
+        }
+
+        internal static uint ExtractTimeEpoch(ref UlidInteropStruct ulid)
+        {
+            if (Environment.Is64BitProcess)
+                return UlidHelperInterop64.ExtractTimeEpoch(ref ulid);
+            
+            return UlidHelperInterop86.ExtractTimeEpoch(ref ulid);
+        }
+
+        internal static IntPtr ToString(ref UlidInteropStruct ulid)
+        {
+            if (Environment.Is64BitProcess)
+                return UlidHelperInterop64.ToString(ref ulid);
+            
+            return UlidHelperInterop86.ToString(ref ulid);
+        }
+        
         public static string ToStringSafe(ref Ulid ulid)
         {
             var @struct = (UlidInteropStruct)ulid;
