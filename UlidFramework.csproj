@@ -45,14 +45,30 @@
         <Compile Include="UlidRng.cs" />
     </ItemGroup>
     <ItemGroup>
-      <Content Include="x64\UlidInterop.dll" />
-      <Content Include="x64\UlidInterop.exp" />
-      <Content Include="x64\UlidInterop.lib" />
-      <Content Include="x64\UlidInterop.pdb" />
-      <Content Include="x86\UlidInterop.dll" />
-      <Content Include="x86\UlidInterop.exp" />
-      <Content Include="x86\UlidInterop.lib" />
-      <Content Include="x86\UlidInterop.pdb" />
+      <Content Include="x64\UlidInterop.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x64\UlidInterop.exp">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x64\UlidInterop.lib">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x64\UlidInterop.pdb">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x86\UlidInterop.dll">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x86\UlidInterop.exp">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x86\UlidInterop.lib">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
+      <Content Include="x86\UlidInterop.pdb">
+        <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      </Content>
     </ItemGroup>
     <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets"/>
     <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
